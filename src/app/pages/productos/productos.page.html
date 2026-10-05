@@ -1,0 +1,113 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Productos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-button routerLink="/inicio">
+    Volver a Inicio
+  </ion-button>
+
+  <h1>Listado de productos</h1>
+
+  @if (loading) {
+    <ion-spinner></ion-spinner>
+    <p>Cargando productos...</p>
+  }
+
+  @if (error) {
+    <p>{{ error }}</p>
+
+    <ion-button (click)="loadProducts()">
+      Reintentar
+    </ion-button>
+  }
+
+  @if (!loading && !error) {
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Descuento</th>
+            <th>Ancho</th>
+            <th>Alto</th>
+            <th>Stock valorado</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (product of productosPaginados; track product.id) {
+
+            <tr>
+
+              <td>{{ product.id }}</td>
+
+              <td>
+                <img
+                  [src]="product.thumbnail"
+                  [alt]="product.title"
+                  width="50"
+                >
+                {{ product.title }}
+              </td>
+
+              <td>{{ product.category }}</td>
+
+              <td>{{ product.price | currency:'EUR' }}</td>
+
+              <td>{{ product.stock }}</td>
+
+              <td>{{ product.discountPercentage }} %</td>
+
+              <td>{{ product.dimensions.width }}</td>
+
+              <td>{{ product.dimensions.height }}</td>
+
+              <td>
+                {{ calcularStockValorado(product) | currency:'EUR' }}
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <div class="paginacion">
+
+      <ion-button
+        (click)="paginaAnterior()"
+        [disabled]="paginaActual === 1">
+        Anterior
+      </ion-button>
+
+      <span>
+        Página {{ paginaActual }} de {{ totalPaginas }}
+      </span>
+
+      <ion-button
+        (click)="paginaSiguiente()"
+        [disabled]="paginaActual === totalPaginas">
+        Siguiente
+      </ion-button>
+
+    </div>
+
+  }
+
+</ion-content>
